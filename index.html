@@ -3,39 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Blayzeo Reddit Tool v3.4</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Blayzeo Reddit Tool</title>
+  <link rel="stylesheet" href="style.css"/>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
 </head>
 <body>
   <div class="container">
-    <h1>🔥 Blayzeo Reddit Outreach Tool v3.4</h1>
-    
-    <!-- Input area -->
-    <div class="input-area">
-      <input type="text" id="postUrl" placeholder="Paste Reddit Post URL..." />
-      <button onclick="fetchData()">🔍 Fetch Post & Comments</button>
+    <h1>🔍 Blayzeo Reddit Tool</h1>
+
+    <input type="text" id="postUrl" placeholder="Paste Reddit post URL" />
+    <button onclick="fetchData()">Fetch Post & Comments</button>
+
+    <!-- Subject and Message Section -->
+    <div id="messageBox">
+      <input type="text" id="messageSubject" placeholder="Message Subject (optional)" />
+      <textarea id="messageBody" placeholder="Message Body (optional)"></textarea>
+      <button onclick="prepareMessages()">Send Messages</button>
     </div>
 
-    <!-- Optional message box -->
-    <div class="message-form">
-      <h3>💬 Optional: Message All Commenters</h3>
-      <input type="text" id="msgSubject" placeholder="Subject (Optional)" />
-      <textarea id="msgBody" rows="3" placeholder="Message Body (Optional)"></textarea>
-      <button id="sendMessagesBtn">🧾 Activate Message Links</button>
-    </div>
+    <!-- Loading Spinner -->
+    <div id="loader" class="loader hidden"></div>
 
-    <!-- React root -->
-    <div id="root"></div>
+    <!-- Post Section -->
+    <div id="postContent"></div>
+
+    <!-- Comments Section -->
+    <h2>Comments:</h2>
+    <div id="comments"></div>
   </div>
 
-  <footer>
-    <p>🚀 Built with ❤️ by Blayzeo Team</p>
-  </footer>
-
-  <!-- App logic -->
   <script src="reddit.js"></script>
 </body>
 </html>
