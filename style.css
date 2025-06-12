@@ -1,111 +1,78 @@
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background: #f9f9f9;
-  color: #333;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f4f6f8;
+  margin: 0;
   padding: 20px;
+  color: #333;
+}
+
+#root {
   max-width: 800px;
   margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
 }
 
-h2 {
-  color: #d83a00;
-  margin-bottom: 10px;
-}
-
-input[type="text"],
-textarea {
+input, textarea {
   width: 100%;
-  padding: 12px;
-  margin: 10px 0;
-  font-size: 16px;
+  padding: 10px;
+  margin: 10px 0 15px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  box-sizing: border-box;
+  font-size: 1em;
 }
 
 button {
-  background-color: #d83a00;
+  padding: 10px 18px;
+  background-color: #ff4500;
   color: white;
   border: none;
-  padding: 12px 20px;
-  font-size: 16px;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s;
-  margin: 5px 0;
+  font-size: 1em;
+  margin-right: 10px;
 }
 
 button:hover {
-  background-color: #c32e00;
+  background-color: #e03d00;
 }
 
-#postContent {
-  margin-top: 20px;
-  background: #fff;
-  padding: 15px;
-  border-radius: 10px;
-  border: 1px solid #eee;
-  box-shadow: 0 0 8px rgba(0,0,0,0.03);
+h2 {
+  color: #ff4500;
+  margin-bottom: 10px;
 }
 
 .comment {
-  background: #fff;
-  margin-top: 15px;
-  padding: 15px;
-  border-radius: 10px;
-  border-left: 4px solid #d83a00;
-  box-shadow: 0 0 4px rgba(0,0,0,0.05);
+  background: #f9f9f9;
+  border-left: 4px solid #ff4500;
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 8px;
 }
 
 .comment strong {
-  color: #333;
+  color: #222;
 }
 
-.comment p {
-  margin: 8px 0;
+.export-btn, .filter-input, .send-all-btn {
+  margin-top: 15px;
 }
 
-.message-btn {
-  display: inline-block;
-  background: #0079d3;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 6px;
-  text-decoration: none;
-  font-size: 14px;
-  margin-top: 8px;
-  transition: background 0.3s;
-}
-
-.message-btn:hover {
-  background: #005da1;
-}
-
-#messageForm {
-  margin-top: 30px;
-  background: #fff;
-  padding: 15px;
-  border-radius: 10px;
-  border: 1px solid #eee;
-}
-
-#loader {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-}
-
-.loader-circle {
+.loader {
+  display: none;
+  margin: 15px auto;
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #ff4500;
+  border-radius: 50%;
   width: 40px;
   height: 40px;
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid #d83a00;
-  border-radius: 50%;
   animation: spin 1s linear infinite;
 }
 
-.hidden {
-  display: none;
+.loading-active .loader {
+  display: block;
 }
 
 @keyframes spin {
@@ -113,13 +80,33 @@ button:hover {
   100% { transform: rotate(360deg); }
 }
 
-@media screen and (max-width: 600px) {
-  button, input, textarea {
-    font-size: 16px;
-  }
+#mobile-share {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #ff4500;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(0,0,0,0.3);
+}
 
-  .message-btn {
-    font-size: 13px;
-    padding: 6px 10px;
-  }
+#mobile-share button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.5em;
+  padding: 12px 16px;
+  cursor: pointer;
+}
+
+.download-link {
+  display: inline-block;
+  margin-top: 10px;
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.filter-label {
+  margin-top: 20px;
+  font-weight: bold;
 }
