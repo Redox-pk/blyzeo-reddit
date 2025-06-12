@@ -3,103 +3,132 @@ const e = React.createElement;
 function RedditFetcher() {
   const [postUrl, setPostUrl] = React.useState('');
   const [comments, setComments] = React.useState([]);
-  const [filteredComments, setFilteredComments] = React.useState([]);
   const [post, setPost] = React.useState(null);
   const [error, setError] = React.useState('');
   const [filter, setFilter] = React.useState('');
+  const [subject, setSubject] = React.useState('');
+  const [body, setBody] = React.useState('');
+  const [showMsgLinks, setShowMsgLinks] = React.useState(false);
 
   async function fetchData() {
+    setError('');
+    setPost(null);
+    setComments([]);
     try {
-      setError('');
       const parts = postUrl.split('/');
       const postId = parts[parts.findIndex(p => p === 'comments') + 1];
       const subreddit = parts[parts.findIndex(p => p === 'r') + 1];
-      const url = `https://www.reddit.com/r/${subreddit}/comments/${postId}.json?limit=500`;
+      const url = `https://www.reddit.com/r/${subreddit}/comments/${postId}.json`;
 
       const res = await axios.get(url);
-      const allComments = res.data[1].data.children.map(c => c.data);
       setPost(res.data[0].data.children[0].data);
+      const allComments = res.data[1].data.children.map(c => c.data).filter(c => c.body);
       setComments(allComments);
-      setFilteredComments(allComments);
     } catch (err) {
-      setError('⚠️ Error fetching Reddit data. Please check the link.');
+      setError('❌ Failed to fetch Reddit data.');
     }
   }
 
   function exportCSV() {
-    const headers = ['Author', 'Profile Link', 'Comment', 'Email Found'];
-    const rows = filteredComments.map(c => {
+    const header = ['Author', 'Profile Link', 'Comment', 'Email'];
+    const rows = comments.map(c => {
       const emailMatch = c.body.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}/);
       return [
         c.author,
-        `https://reddit.com/u/${c.author}`,
-        c.body.replace(/\n/g, ' '),
+        `https://www.reddit.com/user/${c.author}`,
+        `"${c.body.replace(/"/g, '""')}"`,
         emailMatch ? emailMatch[0] : ''
       ];
     });
 
-    let csvContent = "data:text/csv;charset=utf-8," + [headers, ...rows]
-      .map(e => e.map(val => `"${val}"`).join(",")).join("\n");
-
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "blayzeo_reddit_data.csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const csvContent = [header, ...rows].map(e => e.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'blayzeo_reddit_export.csv';
+    a.click();
   }
 
-  function applyFilter(value) {
-    setFilter(value);
-    const filtered = comments.filter(c =>
-      c.body.toLowerCase().includes(value.toLowerCase())
-    );
-    setFilteredComments(filtered);
+  const filteredComments = comments.filter(c =>
+    c.body.toLowerCase().includes(filter.toLowerCase())
+  );
+
+  function getMessageLink(username) {
+    const encodedSubject = encodeURIComponent(subject);
+    const encodedBody = encodeURIComponent(body);
+    return `https://www.reddit.com/message/compose/?to=${username}&subject=${encodedSubject}&message=${encodedBody}`;
   }
 
   return e('div', null,
-    e('div', { className: 'input-area' },
-      e('input', {
-        placeholder: 'Paste Reddit post URL',
-        value: postUrl,
-        onChange: (e) => setPostUrl(e.target.value)
-      }),
-      e('button', { onClick: fetchData }, '🔍 Fetch Post & Comments')
+    post && e('div', { className: 'post' },
+      e('h2', null, `🧵 ${post.title}`),
+      e('p', null, post.selftext || '[No Text]')
     ),
 
-    error && e('p', { className: 'error' }, error),
-
-    post && e('div', { className: 'post-box' },
-      e('h2', null, post.title),
-      e('p', null, post.selftext || '[No Content]'),
+    e('div', { className: 'filters' },
       e('input', {
         type: 'text',
-        placeholder: 'Filter comments by keyword...',
+        placeholder: '🔍 Filter by keyword...',
         value: filter,
-        onChange: (e) => applyFilter(e.target.value)
+        onChange: (e) => setFilter(e.target.value)
       }),
-      e('button', { onClick: exportCSV }, '⬇ Export to Excel (.csv)')
+      e('button', { onClick: exportCSV }, '⬇️ Export to CSV')
     ),
 
-    filteredComments.length > 0 && e('div', { className: 'comments-section' },
-      filteredComments.map((c, i) =>
-        e('div', { key: i, className: 'comment' },
-          e('strong', null, c.author),
-          e('a', {
-            href: `https://reddit.com/u/${c.author}`,
-            target: '_blank',
-            rel: 'noopener noreferrer'
-          }, ' 🔗 Profile'),
+    e('div', { className: 'comment-section' },
+      filteredComments.map((c, i) => {
+        const emailMatch = c.body.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}/);
+        const profileLink = `https://www.reddit.com/user/${c.author}`;
+        return e('div', { key: i, className: 'comment' },
+          e('div', { className: 'comment-header' },
+            e('strong', null, c.author),
+            e('a', { href: profileLink, target: '_blank' }, '🔗 Profile'),
+            emailMatch && e('span', { className: 'email' }, `📧 ${emailMatch[0]}`)
+          ),
           e('p', null, c.body),
-          c.body.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}/) &&
-            e('p', { className: 'email' },
-              '📧 ' + c.body.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}/)[0]
-            )
-        )
-      )
+          showMsgLinks && subject && body &&
+            e('a', {
+              className: 'send-msg-btn',
+              href: getMessageLink(c.author),
+              target: '_blank'
+            }, '✉️ Send Message'),
+          e('div', { className: 'share' },
+            e('a', {
+              href: `https://wa.me/?text=${encodeURIComponent(c.body)}`,
+              target: '_blank'
+            }, '📱 Share')
+          )
+        );
+      })
+    ),
+
+    e('div', { style: { marginTop: '30px' } },
+      e('p', null, `📬 Message Prefill Activated: ${showMsgLinks ? '✅' : '❌'}`)
     )
   );
 }
 
-ReactDOM.render(e(RedditFetcher), document.getElementById('root'));
+function initReact() {
+  ReactDOM.render(e(RedditFetcher), document.getElementById('root'));
+}
+
+// External handlers to connect with HTML inputs
+document.getElementById('sendMessagesBtn').addEventListener('click', () => {
+  const subject = document.getElementById('msgSubject').value;
+  const body = document.getElementById('msgBody').value;
+  window.subject = subject;
+  window.body = body;
+  initReact();
+  setTimeout(() => {
+    const event = new Event('input', { bubbles: true });
+    document.getElementById('postUrl').dispatchEvent(event);
+  }, 100);
+});
+
+window.fetchData = () => {
+  window.subject = document.getElementById('msgSubject').value;
+  window.body = document.getElementById('msgBody').value;
+  initReact();
+};
+
+initReact();
