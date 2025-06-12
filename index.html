@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Blayzeo Reddit</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blayzeo v3.5 – Reddit Comment Scraper</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="root"></div>
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <script src="reddit.js"></script>
+  <h1>🔎 Blayzeo v3.5 – Reddit Comment Scraper</h1>
+  <input id="postUrl" placeholder="Paste Reddit post URL here" />
+  <input id="filterInput" placeholder="Filter by keyword (optional)" />
+  <button onclick="fetchComments()">Fetch Comments</button>
+  <button onclick="exportToExcel()">📥 Export to Excel</button>
+  <div id="results"></div>
+  <script src="script.js"></script>
 </body>
 </html>
