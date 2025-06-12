@@ -3,23 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Blayzeo v3.4 - Reddit Sponsorship Tool</title>
+  <title>Blayzeo Reddit Tool v3.4</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
   <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
 </head>
 <body>
-  <h1>🤖 Blayzeo v3.4 – Reddit Sponsorship Tool</h1>
-  
-  <div id="root"></div>
+  <div class="container">
+    <h1>🔥 Blayzeo Reddit Outreach Tool v3.4</h1>
+    
+    <!-- Input area -->
+    <div class="input-area">
+      <input type="text" id="postUrl" placeholder="Paste Reddit Post URL..." />
+      <button onclick="fetchData()">🔍 Fetch Post & Comments</button>
+    </div>
 
-  <div class="share-buttons">
-    <a href="https://api.whatsapp.com/send?text=Check%20this%20amazing%20Reddit%20tool%20Blayzeo!%20https://yourapp.vercel.app/" target="_blank">
-      📤 Share on WhatsApp
-    </a>
+    <!-- Optional message box -->
+    <div class="message-form">
+      <h3>💬 Optional: Message All Commenters</h3>
+      <input type="text" id="msgSubject" placeholder="Subject (Optional)" />
+      <textarea id="msgBody" rows="3" placeholder="Message Body (Optional)"></textarea>
+      <button id="sendMessagesBtn">🧾 Activate Message Links</button>
+    </div>
+
+    <!-- React root -->
+    <div id="root"></div>
   </div>
 
+  <footer>
+    <p>🚀 Built with ❤️ by Blayzeo Team</p>
+  </footer>
+
+  <!-- App logic -->
   <script src="reddit.js"></script>
 </body>
 </html>
