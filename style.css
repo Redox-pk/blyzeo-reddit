@@ -1,0 +1,17 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background: #f7f7f7;
+}
+input, button {
+  padding: 10px;
+  margin: 5px 0;
+  width: 100%;
+  max-width: 500px;
+}
+.comment {
+  background: white;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+}
