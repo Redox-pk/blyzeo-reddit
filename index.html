@@ -3,33 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Blayzeo Reddit Tool</title>
-  <link rel="stylesheet" href="style.css"/>
+  <title>Blayzeo Reddit Outreach Tool</title>
+  <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
 </head>
 <body>
-  <div class="container">
-    <h1>🔍 Blayzeo Reddit Tool</h1>
+  <div id="root"></div>
 
-    <input type="text" id="postUrl" placeholder="Paste Reddit post URL" />
-    <button onclick="fetchData()">Fetch Post & Comments</button>
-
-    <!-- Subject and Message Section -->
-    <div id="messageBox">
-      <input type="text" id="messageSubject" placeholder="Message Subject (optional)" />
-      <textarea id="messageBody" placeholder="Message Body (optional)"></textarea>
-      <button onclick="prepareMessages()">Send Messages</button>
-    </div>
-
-    <!-- Loading Spinner -->
-    <div id="loader" class="loader hidden"></div>
-
-    <!-- Post Section -->
-    <div id="postContent"></div>
-
-    <!-- Comments Section -->
-    <h2>Comments:</h2>
-    <div id="comments"></div>
+  <!-- Mobile Share Buttons -->
+  <div id="mobile-share">
+    <button onclick="navigator.share ? navigator.share({ title: 'Blayzeo Reddit Tool', url: window.location.href }) : alert('Sharing not supported on this device.')">
+      📤 Share
+    </button>
   </div>
 
   <script src="reddit.js"></script>
