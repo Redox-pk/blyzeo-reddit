@@ -5,6 +5,7 @@ function RedditFetcher() {
   const [comments, setComments] = React.useState([]);
   const [post, setPost] = React.useState(null);
   const [error, setError] = React.useState('');
+  const [messageText, setMessageText] = React.useState('');
 
   async function fetchData() {
     try {
@@ -15,8 +16,8 @@ function RedditFetcher() {
 
       const res = await axios.get(url);
       setPost(res.data[0].data.children[0].data);
-      const rawComments = res.data[1].data.children;
 
+      const rawComments = res.data[1].data.children;
       const allComments = [];
       const extractAll = (items) => {
         items.forEach(item => {
@@ -36,8 +37,15 @@ function RedditFetcher() {
     }
   }
 
+  function generateMessageLink(username) {
+    const base = 'https://www.reddit.com/message/compose/';
+    const subject = 'Sponsor Offer';
+    const encodedMsg = encodeURIComponent(messageText);
+    return `${base}?to=${username}&subject=${subject}&message=${encodedMsg}`;
+  }
+
   return e('div', { className: 'container' },
-    e('h2', null, '🔍 Blayzeo Reddit Tool v3.7'),
+    e('h2', null, '🔍 Blayzeo Reddit Tool v3.8'),
     e('input', {
       placeholder: 'Paste Reddit post URL',
       className: 'input',
@@ -46,10 +54,23 @@ function RedditFetcher() {
     }),
     e('button', { onClick: fetchData, className: 'button' }, 'Fetch Post & Comments'),
     error && e('p', { style: { color: 'red' } }, error),
+
     post && e('div', { className: 'post' },
       e('h3', null, post.title),
       e('p', null, post.selftext || '[No Content]')
     ),
+
+    e('div', { className: 'message-box' },
+      e('h4', null, '✉️ Message to Send to All Commenters:'),
+      e('textarea', {
+        placeholder: 'Write your sponsor message or link...',
+        value: messageText,
+        onChange: (e) => setMessageText(e.target.value),
+        rows: 4,
+        style: { width: '100%', marginBottom: '10px' }
+      })
+    ),
+
     e('div', { className: 'comments' },
       comments.map((c, i) =>
         e('div', { key: i, className: 'comment' },
@@ -60,7 +81,12 @@ function RedditFetcher() {
             rel: 'noopener noreferrer'
           }, ` 🔗 Profile`),
           e('p', null, c.body),
-          e('span', { className: 'score' }, `⬆️ ${c.ups} upvotes`)
+          e('a', {
+            href: generateMessageLink(c.author),
+            target: '_blank',
+            rel: 'noopener noreferrer',
+            className: 'send-message-link'
+          }, '✉️ Send Message')
         )
       )
     )
