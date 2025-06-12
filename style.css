@@ -1,49 +1,122 @@
 body {
   font-family: Arial, sans-serif;
-  background: #f9f9f9;
-  margin: 0;
   padding: 20px;
-}
-
-.container {
-  max-width: 720px;
+  background-color: #f9f9f9;
+  color: #333;
+  max-width: 800px;
   margin: auto;
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 12px rgba(0,0,0,0.1);
 }
 
-.input {
-  width: 100%;
+h1, h2, h3 {
+  text-align: center;
+  color: #d33b6a;
+}
+
+input[type="text"] {
+  width: 90%;
   padding: 10px;
-  margin-bottom: 10px;
+  margin: 10px auto;
+  display: block;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
-.button {
-  padding: 10px 20px;
-  background: #0079d3;
+button {
+  display: inline-block;
+  margin: 10px;
+  padding: 10px 15px;
+  background-color: #d33b6a;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
   cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background-color: #a3274e;
 }
 
 .comment {
-  border-top: 1px solid #ddd;
-  padding: 10px 0;
+  background-color: white;
+  padding: 12px;
+  margin-top: 10px;
+  border-left: 5px solid #d33b6a;
+  border-radius: 5px;
 }
 
-.send-message-link {
-  display: inline-block;
-  margin-top: 6px;
-  background: #ff4500;
-  color: white;
-  padding: 4px 10px;
-  border-radius: 4px;
+.comment strong {
+  display: block;
+  color: #2a2a2a;
+  margin-bottom: 5px;
+}
+
+#filterInput {
+  width: 90%;
+  padding: 8px;
+  margin: 10px auto;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  display: block;
+}
+
+.utility-buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.utility-buttons button, .share-buttons a {
   text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 5px;
+  color: white;
+  font-size: 14px;
+  transition: background 0.3s ease;
 }
 
-.send-message-link:hover {
-  background: #e03d00;
+.export-btn {
+  background-color: #4caf50;
+}
+
+.export-btn:hover {
+  background-color: #388e3c;
+}
+
+.message-btn {
+  background-color: #2196f3;
+}
+
+.message-btn:hover {
+  background-color: #1976d2;
+}
+
+.email-btn {
+  background-color: #ff9800;
+}
+
+.email-btn:hover {
+  background-color: #fb8c00;
+}
+
+.share-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.share-buttons a {
+  margin: 0 10px;
+  background-color: #25d366;
+  padding: 10px 14px;
+  color: white;
+  font-weight: bold;
+}
+
+@media (max-width: 600px) {
+  button, input[type="text"] {
+    width: 95%;
+  }
 }
