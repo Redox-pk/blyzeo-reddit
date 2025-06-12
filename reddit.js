@@ -1,121 +1,122 @@
 const e = React.createElement;
 
-function RedditFetcher() {
-  const [postUrl, setPostUrl] = React.useState('');
-  const [comments, setComments] = React.useState([]);
-  const [post, setPost] = React.useState(null);
-  const [error, setError] = React.useState('');
-  const [loading, setLoading] = React.useState(false);
-  const [messageSubject, setMessageSubject] = React.useState('');
-  const [messageBody, setMessageBody] = React.useState('');
-  const [keywordFilter, setKeywordFilter] = React.useState('');
+let allComments = [];
 
-  async function fetchData() {
-    try {
-      setLoading(true);
-      const parts = postUrl.split('/');
-      const postId = parts[parts.findIndex(p => p === 'comments') + 1];
-      const subreddit = parts[parts.findIndex(p => p === 'r') + 1];
-      const url = `https://www.reddit.com/r/${subreddit}/comments/${postId}.json?limit=500`;
+async function fetchData() {
+  toggleLoader(true);
+  const postUrl = document.getElementById("postUrl").value;
+  const postContentDiv = document.getElementById("postContent");
+  postContentDiv.innerHTML = "";
 
-      const res = await axios.get(url);
-      setPost(res.data[0].data.children[0].data);
-      setComments(res.data[1].data.children.map(c => c.data));
-      setError('');
-    } catch (err) {
-      setError('Error fetching Reddit data.');
-      setPost(null);
-      setComments([]);
-    } finally {
-      setLoading(false);
-    }
+  try {
+    const parts = postUrl.split('/');
+    const postId = parts[parts.findIndex(p => p === 'comments') + 1];
+    const subreddit = parts[parts.findIndex(p => p === 'r') + 1];
+    const url = `https://www.reddit.com/r/${subreddit}/comments/${postId}.json`;
+
+    const res = await axios.get(url);
+    const post = res.data[0].data.children[0].data;
+    allComments = res.data[1].data.children
+      .filter(c => c.kind === 't1')
+      .map(c => c.data);
+
+    renderPost(post);
+    renderComments(allComments);
+    extractEmails(allComments);
+  } catch (err) {
+    postContentDiv.innerHTML = `<p style="color:red">Error fetching Reddit data.</p>`;
   }
-
-  function exportToCSV() {
-    const header = ['Author', 'Comment', 'Profile Link'];
-    const rows = comments.map(c => [
-      c.author,
-      `"${c.body.replace(/"/g, '""')}"`,
-      `https://www.reddit.com/user/${c.author}`
-    ]);
-
-    const csvContent =
-      'data:text/csv;charset=utf-8,' +
-      [header.join(','), ...rows.map(r => r.join(','))].join('\n');
-
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'reddit_comments.csv');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
-
-  const filteredComments = keywordFilter
-    ? comments.filter(c => c.body.toLowerCase().includes(keywordFilter.toLowerCase()))
-    : comments;
-
-  return e('div', null,
-    e('h2', null, '🔍 Blayzeo Reddit Tool'),
-    e('input', {
-      placeholder: 'Paste Reddit post URL',
-      value: postUrl,
-      onChange: e => setPostUrl(e.target.value)
-    }),
-    e('button', { onClick: fetchData }, 'Fetch Post & Comments'),
-
-    e('div', { id: 'loader', className: loading ? '' : 'hidden' },
-      e('div', { className: 'loader-circle' })
-    ),
-
-    error && e('p', { style: { color: 'red' } }, error),
-
-    post && e('div', { id: 'postContent' },
-      e('h3', null, post.title),
-      e('p', null, post.selftext || '[No Content]')
-    ),
-
-    comments.length > 0 && e('div', null,
-      e('input', {
-        placeholder: 'Filter comments by keyword...',
-        value: keywordFilter,
-        onChange: e => setKeywordFilter(e.target.value)
-      }),
-      e('button', { onClick: exportToCSV }, '📁 Export to CSV')
-    ),
-
-    e('div', { id: 'messageForm' },
-      e('h3', null, '📨 Prepare Message'),
-      e('input', {
-        type: 'text',
-        placeholder: 'Subject (optional)',
-        value: messageSubject,
-        onChange: e => setMessageSubject(e.target.value)
-      }),
-      e('textarea', {
-        placeholder: 'Message body (optional)',
-        value: messageBody,
-        onChange: e => setMessageBody(e.target.value)
-      })
-    ),
-
-    filteredComments.map((c, i) =>
-      e('div', { key: i, className: 'comment' },
-        e('strong', null, c.author),
-        e('p', null, c.body),
-        e('a', {
-          href: `https://www.reddit.com/user/${c.author}`,
-          target: '_blank'
-        }, '👤 View Profile'),
-        (messageSubject || messageBody) && e('a', {
-          className: 'message-btn',
-          href: `https://www.reddit.com/message/compose/?to=${c.author}&subject=${encodeURIComponent(messageSubject)}&message=${encodeURIComponent(messageBody)}`,
-          target: '_blank'
-        }, 'Send Message')
-      )
-    )
-  );
+  toggleLoader(false);
 }
 
-ReactDOM.render(e(RedditFetcher), document.getElementById('root'));
+function renderPost(post) {
+  const div = document.getElementById("postContent");
+  div.innerHTML = `
+    <h3>${post.title}</h3>
+    <p>${post.selftext || '[No content]'}</p>
+  `;
+}
+
+function renderComments(comments) {
+  const div = document.getElementById("postContent");
+
+  comments.forEach((c, i) => {
+    const messageSubject = document.getElementById("messageSubject").value;
+    const messageBody = document.getElementById("messageBody").value;
+    const encodedMessage = encodeURIComponent(`${messageSubject ? messageSubject + '\n' : ''}${messageBody}`);
+
+    const msgLink = `https://www.reddit.com/message/compose/?to=${c.author}&message=${encodedMessage}`;
+
+    const commentHtml = `
+      <div class="comment">
+        <strong>${c.author}</strong>
+        <p>${c.body}</p>
+        <a href="https://www.reddit.com/user/${c.author}" target="_blank">🔗 Profile</a>
+        ${messageBody.trim() || messageSubject.trim() ? `<a href="${msgLink}" target="_blank">💬 Send Message</a>` : ''}
+      </div>
+    `;
+    div.innerHTML += commentHtml;
+  });
+}
+
+function applyKeywordFilter() {
+  const keyword = document.getElementById("keywordFilter").value.toLowerCase();
+  const filtered = allComments.filter(c => c.body.toLowerCase().includes(keyword));
+  document.getElementById("postContent").innerHTML = '';
+  renderComments(filtered);
+  extractEmails(filtered);
+}
+
+function extractEmails(comments) {
+  const emailRegex = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi;
+  const emailList = [];
+
+  comments.forEach(c => {
+    const matches = c.body.match(emailRegex);
+    if (matches) {
+      matches.forEach(email => {
+        if (!emailList.includes(email)) {
+          emailList.push(email);
+        }
+      });
+    }
+  });
+
+  const emailUL = document.getElementById("emails");
+  emailUL.innerHTML = '';
+  emailList.forEach(email => {
+    const li = document.createElement("li");
+    li.textContent = email;
+    emailUL.appendChild(li);
+  });
+}
+
+function toggleMessageLinks() {
+  document.getElementById("postContent").innerHTML = '';
+  renderComments(allComments);
+}
+
+function exportToCSV() {
+  const headers = ["Author", "Comment", "Profile Link"];
+  const rows = allComments.map(c => [
+    c.author,
+    `"${c.body.replace(/"/g, '""')}"`,
+    `https://www.reddit.com/user/${c.author}`
+  ]);
+
+  let csvContent = "data:text/csv;charset=utf-8," 
+    + headers.join(",") + "\n"
+    + rows.map(r => r.join(",")).join("\n");
+
+  const link = document.createElement("a");
+  link.setAttribute("href", encodeURI(csvContent));
+  link.setAttribute("download", "reddit_comments.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+function toggleLoader(show) {
+  const loader = document.getElementById("loader");
+  loader.className = show ? '' : 'hidden';
+}
