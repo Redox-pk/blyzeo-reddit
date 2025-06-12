@@ -3,22 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Blayzeo Reddit Outreach Tool</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+  <title>Blayzeo Reddit Tool</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <div id="root"></div>
+  <h2>🔍 Blayzeo Reddit Tool</h2>
 
-  <!-- Mobile Share Buttons -->
-  <div id="mobile-share">
-    <button onclick="navigator.share ? navigator.share({ title: 'Blayzeo Reddit Tool', url: window.location.href }) : alert('Sharing not supported on this device.')">
-      📤 Share
-    </button>
+  <input type="text" id="postUrl" placeholder="Paste Reddit post URL" />
+  <button onclick="fetchData()">Fetch Post & Comments</button>
+
+  <input type="text" id="keywordFilter" placeholder="🔎 Filter comments by keyword" />
+  <button onclick="applyKeywordFilter()">Apply Filter</button>
+
+  <div id="loader" class="hidden">
+    <div class="loader-circle"></div>
   </div>
 
+  <div id="postContent"></div>
+
+  <div id="messageForm">
+    <h3>💬 Message Creator</h3>
+    <input type="text" id="messageSubject" placeholder="Subject (optional)">
+    <textarea id="messageBody" placeholder="Body of message (optional)"></textarea>
+    <button onclick="toggleMessageLinks()">Generate Message Links</button>
+  </div>
+
+  <div id="emailList">
+    <h3>📧 Detected Emails</h3>
+    <ul id="emails"></ul>
+  </div>
+
+  <button onclick="exportToCSV()">📁 Export Comments to CSV</button>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="reddit.js"></script>
 </body>
 </html>
