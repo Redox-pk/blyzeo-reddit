@@ -1,122 +1,150 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: #f8f9fa;
   color: #333;
-  max-width: 800px;
-  margin: auto;
 }
 
-h1, h2, h3 {
+h1, h2 {
   text-align: center;
-  color: #d33b6a;
+  color: #222;
 }
 
-input[type="text"] {
-  width: 90%;
+input[type="text"], textarea {
+  width: 100%;
+  max-width: 600px;
   padding: 10px;
   margin: 10px auto;
   display: block;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 6px;
+  font-size: 16px;
 }
 
 button {
-  display: inline-block;
-  margin: 10px;
-  padding: 10px 15px;
-  background-color: #d33b6a;
+  background-color: #0066cc;
   color: white;
   border: none;
-  border-radius: 5px;
+  padding: 10px 16px;
+  margin: 10px 5px;
+  font-size: 16px;
+  border-radius: 6px;
   cursor: pointer;
-  font-weight: bold;
+  transition: background-color 0.3s;
 }
 
 button:hover {
-  background-color: #a3274e;
+  background-color: #0052a3;
+}
+
+.post {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.filters {
+  margin: 20px auto;
+  text-align: center;
+}
+
+.comment-section {
+  margin-top: 30px;
 }
 
 .comment {
-  background-color: white;
-  padding: 12px;
-  margin-top: 10px;
-  border-left: 5px solid #d33b6a;
-  border-radius: 5px;
-}
-
-.comment strong {
-  display: block;
-  color: #2a2a2a;
-  margin-bottom: 5px;
-}
-
-#filterInput {
-  width: 90%;
-  padding: 8px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
   margin: 10px auto;
-  border: 1px solid #aaa;
-  border-radius: 5px;
-  display: block;
+  padding: 15px;
+  border-radius: 8px;
+  max-width: 800px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
 }
 
-.utility-buttons {
+.comment-header {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 15px;
+  margin-bottom: 8px;
 }
 
-.utility-buttons button, .share-buttons a {
+.comment-header strong {
+  font-size: 16px;
+  color: #2c3e50;
+}
+
+.comment-header a {
+  color: #007bff;
+  margin-left: 10px;
   text-decoration: none;
-  padding: 10px 12px;
-  border-radius: 5px;
-  color: white;
-  font-size: 14px;
-  transition: background 0.3s ease;
 }
 
-.export-btn {
-  background-color: #4caf50;
+.comment-header a:hover {
+  text-decoration: underline;
 }
 
-.export-btn:hover {
-  background-color: #388e3c;
-}
-
-.message-btn {
-  background-color: #2196f3;
-}
-
-.message-btn:hover {
-  background-color: #1976d2;
-}
-
-.email-btn {
-  background-color: #ff9800;
-}
-
-.email-btn:hover {
-  background-color: #fb8c00;
-}
-
-.share-buttons {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.share-buttons a {
-  margin: 0 10px;
-  background-color: #25d366;
-  padding: 10px 14px;
-  color: white;
+.email {
+  color: #27ae60;
   font-weight: bold;
+  margin-left: 10px;
 }
 
-@media (max-width: 600px) {
-  button, input[type="text"] {
+.send-msg-btn {
+  background-color: #28a745;
+  padding: 6px 10px;
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 14px;
+  margin-top: 10px;
+  display: inline-block;
+}
+
+.send-msg-btn:hover {
+  background-color: #218838;
+}
+
+.share {
+  margin-top: 10px;
+}
+
+.share a {
+  color: #25d366;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+textarea {
+  height: 100px;
+}
+
+#messageInputSection {
+  background-color: #ffffff;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin: 20px auto;
+  max-width: 600px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+@media screen and (max-width: 768px) {
+  .comment-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  button, input[type="text"], textarea {
+    width: 90%;
+  }
+
+  .comment {
     width: 95%;
   }
 }
